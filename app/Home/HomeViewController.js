@@ -3,12 +3,19 @@ import {
     AppRegistry,
     StyleSheet,
     Text,
-    View
+    View,
+    TouchableOpacity
 } from 'react-native';
 
 export default class HomeViewController extends Component {
     static defaultProps = {
       title: "首页"
+    }
+
+    rightNavigatorItem() {
+        return (
+            <Text>右边啊</Text>
+        );
     }
 
     render() {

@@ -27,17 +27,17 @@ export default class HTabBarViewController extends Component {
                 <HNavigator
                     tabLabel = "首页"
                     title = "首页"
-                    rootViewController = {HomeViewController}
+                    rootViewController = {React.createElement(HomeViewController,null,null)}
                 />
                 <HNavigator
                     tabLabel="地图"
                     title = '地图'
-                    rootViewController = {MapViewController}
+                    rootViewController = {React.createElement(MapViewController,null,null)}
                 />
                 <HNavigator
                     tabLabel="个人"
                     title = '个人'
-                    rootViewController = {PersonViewController}
+                    rootViewController = {React.createElement(PersonViewController,null,null)}
                 />
             </ScrollableTabView>
         );

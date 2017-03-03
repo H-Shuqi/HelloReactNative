@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import Icon from '../../node_modules/react-native-vector-icons/Ionicons';
-import MapViewController from '../Map/MapViewController'
 
 export default class HNavigator extends Component {
     static defaultProps = {
@@ -19,7 +18,7 @@ export default class HNavigator extends Component {
     constructor(props){
         super(props);
         this.state = {
-            viewControllers:[React.createElement(props.rootViewController,null,null)]
+            viewControllers:[{viewController:this.props.rootViewController,index:0}]
         }
     }
 
@@ -27,8 +26,11 @@ export default class HNavigator extends Component {
         return (
                 <Navigator
                     routeStack = {this.state.viewControllers}
-                    initialRoute = {{component:this.state.viewControllers[0],index:0}}
-                    renderScene = {(route, navigator) => route.navigator=navigator}
+                    initialRoute = {this.state.viewControllers[0]}
+                    renderScene = {(route, navigator) => {
+                        route.viewController.navigator = navigator;
+                        return route.viewController;
+                    }}
                     navigationBar = {
                         this.props.navigationBar ? this.props.navigationBar :
                         <Navigator.NavigationBar style={styles.navBar}
@@ -44,26 +46,24 @@ export default class HNavigator extends Component {
 class NavigationBarRouteMapper {
     //Native Navigation Button item - Left
     LeftButton(route, navigator, index, navState) {
-        let previousRoute = navState.routeStack[index - 1];
-        let scene = navState.routeStack[index];
-        if (previousRoute == undefined) {
-            return null;
-        }
-        var isCustomLeft
-        if (typeof scene.leftNavigatorItem != 'function') {
-            return null;
-        } else {
-            let leftItem = scene.leftNavigatorItem();
-            if (leftItem == undefined) {
-                return null;
+        let scene = navState.routeStack[index].viewController;
+        
+        if (typeof scene.leftNavigatorItem == 'function') {
+            let customLeftItem = scene.leftNavigatorItem();
+            if(customLeftItem != undefined) {
+                return customLeftItem;
             }
         }
 
+        let previousRoute = navState.routeStack[index - 1];
+        if (previousRoute == undefined) {
+            return null;
+        }
         return (
-            <TouchableOpacity onPress={route.leftNavigatorItemPress} style={[styles.navBarButton, styles.navBarButtonLeft]}>
+            <TouchableOpacity onPress={()=>navigator.pop()} style={[styles.navBarButton, styles.navBarButtonLeft]}>
                 <Icon name={"ios-arrow-back"} size={30} color={"white"} style={[styles.navItem,{paddingTop:7}]} />
                 <Text style={[styles.navItem, styles.navBarText]}>
-                    {previousRoute.title}
+                    {previousRoute.viewController.props.title}
                 </Text>
             </TouchableOpacity>
         );
@@ -71,23 +71,21 @@ class NavigationBarRouteMapper {
 
     //Native Navigation Button item - Right
     RightButton(route, navigator, index, navState) {
-        if (route.id === 'detail') {
-            return null;
+        let scene = navState.routeStack[index].viewController;
+
+        if (typeof scene.rightNavigatorItem == 'function') {
+            return scene.rightNavigatorItem();
         }
-        return (
-            <TouchableOpacity onPress={route.rightNavigatorItemPress} style={[styles.navBarButton, styles.navBarButtonRight]}>
-                <Text style={[styles.navItem, styles.navBarText]}>
-                    详情
-                </Text>
-            </TouchableOpacity>
-        );
+
+        return null;
     }
 
     //标题
     Title(route, navigator, index, navState) {
+        let scene = navState.routeStack[index].viewController;
         return (
             <Text style={[styles.navItem, styles.navBarText, styles.navBarTitleText]}>
-                {route.title}
+                {scene.props.title}
             </Text>
         );
     }
