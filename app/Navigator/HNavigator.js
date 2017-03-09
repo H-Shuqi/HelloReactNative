@@ -83,10 +83,10 @@ class NavigationBarRouteMapper {
         return (
             <TouchableOpacity onPress={()=>navigator.pop()} style={[hnative_styles.navBarButton, hnative_styles.navBarButtonLeft]}>
                 <View style={[hnative_styles.navItem]}>
-                    <Icon name={"ios-arrow-back"} size={30} color={"white"} style={{backgroundColor:'#0f0'}}/>
+                    <Icon name={"ios-arrow-back"} size={30} color={"white"} />
                 </View>
                 <View style={hnative_styles.navItem}>
-                    <Text style={[hnative_styles.navBarText,{backgroundColor:'#0f0'}]}>
+                    <Text style={hnative_styles.navBarText}>
                         {previousRoute.viewController.props.title}
                     </Text>
                 </View>
@@ -100,7 +100,11 @@ class NavigationBarRouteMapper {
 
         if (typeof scene.type.prototype.rightNavigatorItem == 'function') {
             let rightItem = scene.type.prototype.rightNavigatorItem.call(scene);
-            return rightItem;
+            return (
+                <View style={[hnative_styles.navBarButton, hnative_styles.navBarButtonRight]}>
+                    {rightItem}
+                </View>
+            );
         }
 
         return null;
@@ -111,7 +115,7 @@ class NavigationBarRouteMapper {
         let scene = navState.routeStack[index].viewController;
         return (
             <View style={[hnative_styles.navItem, hnative_styles.navBarTitle]}>
-                <Text style={[hnative_styles.navBarText,{backgroundColor:'#0f0'}]}>
+                <Text style={hnative_styles.navBarText}>
                     {scene.props.title}
                 </Text>
             </View>
@@ -133,8 +137,8 @@ const hnative_styles = StyleSheet.create({
         alignItems:'center'//子垂直居中
     },
     navItem: {
+        paddingLeft:8,
         flexDirection:"row",
-        backgroundColor:'#f00',
         justifyContent: 'center',
         alignItems:'center'
     },
@@ -144,11 +148,11 @@ const hnative_styles = StyleSheet.create({
     navBarText: {
         color: 'white',
         fontSize: 16,
+        textAlign:'center',
         flexWrap: 'nowrap'
     },
     navBarButton: {
-        marginVertical:1,
-        backgroundColor:'#00f',
+        flex:1,
         flexWrap: 'nowrap',
         justifyContent: 'center',
         alignSelf:'center'
