@@ -15,7 +15,7 @@ import PersonViewController from '../Person/PersonViewController'
 
 export default class HTabBarViewController extends Component {
     render() {
-        var iconNames = ["ios-paper","ios-albums","ios-person-add"];
+        var iconNames = ["ios-home","ios-map","ios-person"];
         return (
             <ScrollableTabView
                 ref="tabView"
@@ -24,25 +24,10 @@ export default class HTabBarViewController extends Component {
                 tabBarPosition='bottom'
                 renderTabBar={ () => <HTabBar iconNames={iconNames} iconSize={24} activeTextColor="#2096F3" inactiveTextColor="#B7B7B7"/> }
             >
-                <HNavigator
-                    tabLabel = "首页"
-                    title = "首页"
-                    rootViewController = {React.createElement(HomeViewController,null,null)}
-                />
-                <HNavigator
-                    tabLabel="地图"
-                    title = '地图'
-                    rootViewController = {React.createElement(MapViewController,null,null)}
-                />
-                <HNavigator
-                    tabLabel="个人"
-                    title = '个人'
-                    rootViewController = {React.createElement(PersonViewController,null,null)}
-                />
+                <HNavigator tabLabel = "首页" rootViewController = {{Component:HomeViewController}} style={{backgroundColor:'#2096F3'}} />
+                <HNavigator tabLabel = "地图" rootViewController = {{Component:MapViewController}} style={{backgroundColor:'#2096F3'}} />
+                <HNavigator tabLabel = "个人" rootViewController = {{Component:PersonViewController}} style={{backgroundColor:'#2096F3'}} />
             </ScrollableTabView>
         );
     }
 }
-
-
-     

@@ -9,36 +9,57 @@ import {
 } from 'react-native';
 
 import Icon from '../../node_modules/react-native-vector-icons/Ionicons';
+import HomeViewController from '../Home/HomeViewController'
 
 export default class HNavigator extends Component {
-    static defaultProps = {
-        rootViewController: React.PropTypes.Component
+    static propTypes = {
+        rootViewController: React.PropTypes.object.isRequired,
+        nav: React.PropTypes.object
     }
 
     constructor(props){
         super(props);
-        this.state = {
-            viewControllers:[{viewController:this.props.rootViewController,index:0}]
-        }
+
+        this.render.bind(this);
+        this.pop.bind(this);
+        this.push.bind(this);
     }
 
     render() {
+        var hNav = this;
         return (
                 <Navigator
-                    routeStack = {this.state.viewControllers}
-                    initialRoute = {this.state.viewControllers[0]}
+                    initialRoute = {this.props.rootViewController}
                     renderScene = {(route, navigator) => {
-                        route.viewController.navigator = navigator;
-                        return route.viewController;
+                        hNav.navigator = navigator;
+                        let viewController = <route.Component navigator={hNav} />;
+                        route.viewController = viewController;
+                        return viewController;
+                    }}
+                    sceneStyle={{
+                        marginLeft: -10,
+                        paddingLeft: 10,
+                        shadowColor: 'black',
+                        shadowOffset: {width: 0, height: 0},
+                        shadowOpacity: 0.4,
+                        shadowRadius: 3
                     }}
                     navigationBar = {
-                        this.props.navigationBar ? this.props.navigationBar :
-                        <Navigator.NavigationBar style={styles.navBar}
+                        hNav.props.navigationBar ? hNav.props.navigationBar :
+                        <Navigator.NavigationBar style={[hnative_styles.navBar,this.props.style]}
                             routeMapper = {new NavigationBarRouteMapper()}
                         />
                     }
                 />
         );
+    }
+
+    pop(){
+        this.navigator.pop();
+    }
+
+    push(viewController){
+        this.navigator.push(viewController);
     }
 }
 
@@ -60,11 +81,15 @@ class NavigationBarRouteMapper {
             return null;
         }
         return (
-            <TouchableOpacity onPress={()=>navigator.pop()} style={[styles.navBarButton, styles.navBarButtonLeft]}>
-                <Icon name={"ios-arrow-back"} size={30} color={"white"} style={[styles.navItem,{paddingTop:7}]} />
-                <Text style={[styles.navItem, styles.navBarText]}>
-                    {previousRoute.viewController.props.title}
-                </Text>
+            <TouchableOpacity onPress={()=>navigator.pop()} style={[hnative_styles.navBarButton, hnative_styles.navBarButtonLeft]}>
+                <View style={[hnative_styles.navItem]}>
+                    <Icon name={"ios-arrow-back"} size={30} color={"white"} style={{backgroundColor:'#0f0'}}/>
+                </View>
+                <View style={hnative_styles.navItem}>
+                    <Text style={[hnative_styles.navBarText,{backgroundColor:'#0f0'}]}>
+                        {previousRoute.viewController.props.title}
+                    </Text>
+                </View>
             </TouchableOpacity>
         );
     }
@@ -73,20 +98,23 @@ class NavigationBarRouteMapper {
     RightButton(route, navigator, index, navState) {
         let scene = navState.routeStack[index].viewController;
 
-        if (typeof scene.rightNavigatorItem == 'function') {
-            return scene.rightNavigatorItem();
+        if (typeof scene.type.prototype.rightNavigatorItem == 'function') {
+            let rightItem = scene.type.prototype.rightNavigatorItem.call(scene);
+            return rightItem;
         }
 
         return null;
     }
 
-    //标题
+    //Native Navigation Title item
     Title(route, navigator, index, navState) {
         let scene = navState.routeStack[index].viewController;
         return (
-            <Text style={[styles.navItem, styles.navBarText, styles.navBarTitleText]}>
-                {scene.props.title}
-            </Text>
+            <View style={[hnative_styles.navItem, hnative_styles.navBarTitle]}>
+                <Text style={[hnative_styles.navBarText,{backgroundColor:'#0f0'}]}>
+                    {scene.props.title}
+                </Text>
+            </View>
         );
     }
 }
@@ -97,29 +125,33 @@ class HNavigatorButtomItem {
     }
 }
 
-const styles = StyleSheet.create({
+const hnative_styles = StyleSheet.create({
     navBar: {
-        backgroundColor: '#2096F3',
-        justifyContent: 'center'
+        backgroundColor: '#fff',
+        flexDirection:"row",//子横向排列
+        justifyContent: 'center',//子横向居中
+        alignItems:'center'//子垂直居中
     },
     navItem: {
-        paddingHorizontal: 3,
-        justifyContent: 'center'
+        flexDirection:"row",
+        backgroundColor:'#f00',
+        justifyContent: 'center',
+        alignItems:'center'
+    },
+    navBarTitle: {
+        flex:1
     },
     navBarText: {
         color: 'white',
         fontSize: 16,
-        height: 40,
-        lineHeight: 40,
         flexWrap: 'nowrap'
     },
-    navBarTitleText: {
-        fontWeight: '500',
-    },
     navBarButton: {
-        paddingLeft: 10,
+        marginVertical:1,
+        backgroundColor:'#00f',
         flexWrap: 'nowrap',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignSelf:'center'
     },
     navBarButtonRight: {
         flexDirection: 'row-reverse'

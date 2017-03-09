@@ -13,9 +13,17 @@ export default class PersonViewController extends Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.mainView}>
                 <Text>Person</Text>
             </View>
         );
+    }
+}
+
+const styles = {
+    mainView : {
+        marginTop: 64,
+        backgroundColor:'#F5F5F5',
+        flex:1
     }
 }

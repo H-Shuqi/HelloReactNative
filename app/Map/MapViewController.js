@@ -13,9 +13,17 @@ export default class MapViewController extends Component {
 
     render() {
         return (
-            <View>
-                <Text>Map</Text>
+            <View style={styles.mainView}>
+                <Text>地图</Text>
             </View>
         );
+    }
+}
+
+const styles = {
+    mainView : {
+        //marginTop: 64,
+        backgroundColor:'#f00',//'#F5F5F5',
+        flex:1
     }
 }

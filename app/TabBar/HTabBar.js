@@ -21,7 +21,7 @@ const HTabBar = React.createClass({
         tabStyle: View.propTypes.style,
         renderTab: React.PropTypes.func,
         iconSize: React.PropTypes.number,
-        iconNames: React.PropTypes.array,
+        iconNames: React.PropTypes.array.isRequired,
     },
  
     getDefaultProps() {
@@ -70,7 +70,7 @@ const HTabBar = React.createClass({
 
 const styles = StyleSheet.create({
   tabs :{
-    height: 60,
+    height: 54,
     flexDirection: 'row',
     justifyContent: 'space-around',
     //borderWidth: 1,
@@ -78,14 +78,15 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
     borderBottomWidth: 0,
-    paddingTop: 4,
+    //paddingTop: 4,
     borderColor: '#ccc',
   },
   tab: {
-	flex: 1,
+    flex: 1,
+    flexDirection: 'column',
 	alignItems: 'center',
 	justifyContent: 'center',
-	paddingBottom: 10,
+	//paddingBottom: 10,
   },
 });
 
