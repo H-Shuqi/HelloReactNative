@@ -22,7 +22,6 @@ export default class MapViewController extends Component {
 
 const styles = {
     mainView : {
-        //marginTop: 64,
         backgroundColor:'#f00',//'#F5F5F5',
         flex:1
     }

@@ -8,13 +8,15 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import Icon from '../../node_modules/react-native-vector-icons/Ionicons';
-import HomeViewController from '../Home/HomeViewController'
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class HNavigator extends Component {
-    static propTypes = {
-        rootViewController: React.PropTypes.object.isRequired,
-        nav: React.PropTypes.object
+    getInitialState(){
+        return {
+            title:"",
+            leftNavigatorItem:null,
+            rightNavigatorItem:null,
+        };
     }
 
     constructor(props){
@@ -27,27 +29,29 @@ export default class HNavigator extends Component {
 
     render() {
         var hNav = this;
+        let child = React.Children.map(this.props.children,(child)=>child)[0];
+
         return (
                 <Navigator
-                    initialRoute = {this.props.rootViewController}
-                    renderScene = {(route, navigator) => {
-                        hNav.navigator = navigator;
-                        let viewController = <route.Component navigator={hNav} />;
-                        route.viewController = viewController;
-                        return viewController;
+                    initialRoute = {{component:child}}
+                    renderScene = {(route, nav) => {
+                        hNav.navigator = nav;
+                        let aaa = React.cloneElement(route.component,{navigator:hNav});
+                        aaa.props.children[0]
+                        return aaa;
                     }}
-                    sceneStyle={{
+                    /*sceneStyle={{
                         marginLeft: -10,
                         paddingLeft: 10,
                         shadowColor: 'black',
                         shadowOffset: {width: 0, height: 0},
                         shadowOpacity: 0.4,
                         shadowRadius: 3
-                    }}
+                    }}*/
                     navigationBar = {
                         hNav.props.navigationBar ? hNav.props.navigationBar :
                         <Navigator.NavigationBar style={[hnative_styles.navBar,this.props.style]}
-                            routeMapper = {new NavigationBarRouteMapper()}
+                            routeMapper = {new NavigationBarRouteMapper(this.state.leftNavigatorItem,this.state.rightNavigatorItem)}
                         />
                     }
                 />
@@ -65,9 +69,13 @@ export default class HNavigator extends Component {
 
 
 class NavigationBarRouteMapper {
+    constructor(){
+
+    }
+
     //Native Navigation Button item - Left
     LeftButton(route, navigator, index, navState) {
-        let scene = navState.routeStack[index].viewController;
+        let scene = navState.routeStack[index].component;
         
         if (typeof scene.leftNavigatorItem == 'function') {
             let customLeftItem = scene.leftNavigatorItem();
@@ -96,7 +104,7 @@ class NavigationBarRouteMapper {
 
     //Native Navigation Button item - Right
     RightButton(route, navigator, index, navState) {
-        let scene = navState.routeStack[index].viewController;
+        let scene = navState.routeStack[index].component;
 
         if (typeof scene.type.prototype.rightNavigatorItem == 'function') {
             let rightItem = scene.type.prototype.rightNavigatorItem.call(scene);
@@ -112,7 +120,7 @@ class NavigationBarRouteMapper {
 
     //Native Navigation Title item
     Title(route, navigator, index, navState) {
-        let scene = navState.routeStack[index].viewController;
+        let scene = navState.routeStack[index].component;
         return (
             <View style={[hnative_styles.navItem, hnative_styles.navBarTitle]}>
                 <Text style={hnative_styles.navBarText}>

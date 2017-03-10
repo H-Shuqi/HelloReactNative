@@ -12,12 +12,12 @@ import {
   View
 } from 'react-native';
 
-import HTabBarViewController from './app/TabBar/HTabBarViewController'
+import MainViewController from './app/Main'
 
 export default class HelloReactNative extends Component {
   render() {
     return (
-      <HTabBarViewController></HTabBarViewController>
+      <MainViewController/>
     );
   }
 }

@@ -32,10 +32,15 @@ export default class HomeViewController extends Component {
     }
 
     render() {
+        let _this = this;
         return (
             <View style={styles.mainView}>
                 <View style={{backgroundColor:'#fec',height:40}}>
+                    <TouchableOpacity style={{backgroundColor:'#f00',width:100,height:200}} onPress={()=>{
+                        _this.props.navigator.push(<MapViewController/>)
+                    }}>
 
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -44,6 +49,7 @@ export default class HomeViewController extends Component {
 
 const styles = {
     mainView : {
+        marginTop:100,
         backgroundColor:'#F5F5F5',
         flex:1
     },

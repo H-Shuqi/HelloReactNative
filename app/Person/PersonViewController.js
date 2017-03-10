@@ -22,7 +22,7 @@ export default class PersonViewController extends Component {
 
 const styles = {
     mainView : {
-        marginTop: 64,
+        // marginTop: 64,
         backgroundColor:'#F5F5F5',
         flex:1
     }

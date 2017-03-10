@@ -7,7 +7,7 @@ const {
     TouchableOpacity,
 } = ReactNative;
 
-import Icon from '../../node_modules/react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const HTabBar = React.createClass({
     propTypes: {
